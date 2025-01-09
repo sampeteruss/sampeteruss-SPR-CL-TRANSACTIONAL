@@ -5,6 +5,7 @@ import Lab.Model.Ship;
 import Lab.Repository.ShipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
  * tonnage - we're left to assume some form of unwanted user error in that case.
  */
 @Service
+@Transactional(rollbackFor = InvalidTonnageException.class)
 public class ShipService {
     ShipRepository shipRepository;
     @Autowired
@@ -32,6 +34,7 @@ public class ShipService {
      * @param ships transient ship entities
      * @throws InvalidTonnageException ships can not have negative tonnage (they'd sink)
      */
+
     public List<Ship> addListShips(List<Ship> ships) throws InvalidTonnageException {
         List<Ship> persistedShips = new ArrayList<>();
         for(int i = 0; i < ships.size(); i++){
